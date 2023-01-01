@@ -1,7 +1,7 @@
 import './css/styles.css';
 import { Notify } from 'notiflix';
 import NewsApiService from './js/news-service';
-import simpleLightbox from 'simplelightbox';
+import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const refs = {
@@ -16,6 +16,8 @@ refs.searchForm.addEventListener('submit', onSearch);
 refs.loadMoreBt.addEventListener('click', onLoadMore);
 
 refs.loadMoreBt.classList.add('is-hidden');
+
+let simpleLightBox;
 
 function onSearch(e) {
   e.preventDefault();
@@ -39,7 +41,7 @@ function onSearch(e) {
         );
       }
       createMarkup(data.hits);
-      let simpleLightBox = new SimpleLightbox('.gallery a', {
+      simpleLightBox = new SimpleLightbox('.gallery a', {
         captionsData: 'alt',
         captionPosition: 'bottom',
         captionDelay: 250,
@@ -56,7 +58,7 @@ function onLoadMore(e) {
     .fetchArticles()
     .then(data => {
       createMarkup(data.hits);
-      let simpleLightBox = new SimpleLightbox('.gallery a', {
+      simpleLightBox = new SimpleLightbox('.gallery a', {
         captionsData: 'alt',
         captionPosition: 'bottom',
         captionDelay: 250,
