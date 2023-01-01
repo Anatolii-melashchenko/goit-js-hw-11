@@ -10,7 +10,7 @@ const refs = {
   loadMoreBt: document.querySelector('.load-more'),
 };
 
-// let simpleLightbox;
+let simpleLightbox = '';
 
 const newsApiService = new NewsApiService();
 
@@ -53,6 +53,8 @@ function onSearch(e) {
 
 function onLoadMore(e) {
   e.preventDefault();
+
+  simpleLightBox.destroy();
 
   newsApiService
     .fetchArticles()
