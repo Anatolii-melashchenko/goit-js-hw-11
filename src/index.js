@@ -10,7 +10,7 @@ const refs = {
   loadMoreBt: document.querySelector('.load-more'),
 };
 
-let simpleLightbox;
+// let simpleLightbox;
 
 const newsApiService = new NewsApiService();
 
