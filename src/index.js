@@ -54,7 +54,6 @@ function onSearch(e) {
 function onLoadMore(e) {
   e.preventDefault();
 
-  simpleLightBox.destroy();
   newsApiService
     .fetchArticles()
     .then(data => {
