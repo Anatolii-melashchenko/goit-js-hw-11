@@ -10,8 +10,6 @@ const refs = {
   loadMoreBt: document.querySelector('.load-more'),
 };
 
-let simpleLightbox = '';
-
 const newsApiService = new NewsApiService();
 
 refs.searchForm.addEventListener('submit', onSearch);
@@ -41,7 +39,7 @@ function onSearch(e) {
         );
       }
       createMarkup(data.hits);
-      simpleLightBox = new SimpleLightbox('.gallery a', {
+      let simpleLightBox = new SimpleLightbox('.gallery a', {
         captionsData: 'alt',
         captionPosition: 'bottom',
         captionDelay: 250,
@@ -54,13 +52,11 @@ function onSearch(e) {
 function onLoadMore(e) {
   e.preventDefault();
 
-  simpleLightBox.destroy();
-
   newsApiService
     .fetchArticles()
     .then(data => {
       createMarkup(data.hits);
-      simpleLightBox = new SimpleLightbox('.gallery a', {
+      let simpleLightBox = new SimpleLightbox('.gallery a', {
         captionsData: 'alt',
         captionPosition: 'bottom',
         captionDelay: 250,
