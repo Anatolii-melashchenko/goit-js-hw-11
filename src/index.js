@@ -69,7 +69,7 @@ function onLoadMore(e) {
         captionPosition: 'bottom',
         captionDelay: 250,
       }).refresh();
-      if (data.hits.length === 0) {
+      if (data.hits.length < 40) {
         refs.loadMoreBt.classList.add('is-hidden');
         Notify.failure(
           `We're sorry, but you've reached the end of search results.`
