@@ -23,6 +23,7 @@ function onSearch(e) {
   e.preventDefault();
 
   newsApiService.query = e.currentTarget.elements.searchQuery.value;
+
   if (!newsApiService.query) {
     Notify.failure(
       'The search string cannot be empty. Please specify your search query.'
@@ -30,7 +31,7 @@ function onSearch(e) {
     return;
   }
   newsApiService.resetPage();
-  refs.loadMoreBt.classList.remove('is-hidden');
+
   clearArticlesContainer();
   newsApiService
     .fetchArticles()
@@ -39,8 +40,13 @@ function onSearch(e) {
         Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.'
         );
+        return;
       }
+
       createMarkup(data.hits);
+      if (data.totalHits > 40) {
+        refs.loadMoreBt.classList.remove('is-hidden');
+      }
       simpleLightBox = new SimpleLightbox('.gallery a', {
         captionsData: 'alt',
         captionPosition: 'bottom',
