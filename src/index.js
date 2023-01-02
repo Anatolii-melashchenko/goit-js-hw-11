@@ -17,9 +17,13 @@ refs.loadMoreBt.addEventListener('click', onLoadMore);
 
 refs.loadMoreBt.classList.add('is-hidden');
 
-let simpleLightBox;
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionPosition: 'bottom',
+  captionDelay: 250,
+});
 
-function onSearch(e) {
+async function onSearch(e) {
   e.preventDefault();
 
   newsApiService.query = e.currentTarget.elements.searchQuery.value;
@@ -30,53 +34,92 @@ function onSearch(e) {
     );
     return;
   }
+
   newsApiService.resetPage();
 
   clearArticlesContainer();
-  newsApiService
-    .fetchArticles()
-    .then(data => {
-      if (data.totalHits === 0) {
-        Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
-        return;
-      }
 
-      createMarkup(data.hits);
-      if (data.totalHits > 40) {
-        refs.loadMoreBt.classList.remove('is-hidden');
-      }
-      simpleLightBox = new SimpleLightbox('.gallery a', {
-        captionsData: 'alt',
-        captionPosition: 'bottom',
-        captionDelay: 250,
-      }).refresh();
-      Notify.success(`Hooray! We found ${data.totalHits} images.`);
-    })
-    .catch(error => console.log(error));
+  try {
+    const data = await newsApiService.fetchArticles();
+
+    if (data.totalHits === 0) {
+      Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+      return;
+    }
+
+    createMarkup(data.hits);
+
+    if (data.totalHits > 40) {
+      refs.loadMoreBt.classList.remove('is-hidden');
+    }
+
+    lightbox.refresh();
+
+    Notify.success(`Hooray! We found ${data.totalHits} images.`);
+  } catch (error) {
+    console.log(error);
+  }
+
+  //   newsApiService
+  //     .fetchArticles()
+  //     .then(data => {
+  //       if (data.totalHits === 0) {
+  //         Notify.failure(
+  //           'Sorry, there are no images matching your search query. Please try again.'
+  //         );
+  //         return;
+  //       }
+
+  //       createMarkup(data.hits);
+
+  //       if (data.totalHits > 40) {
+  //         refs.loadMoreBt.classList.remove('is-hidden');
+  //       }
+
+  //       lightbox.refresh();
+
+  //       Notify.success(`Hooray! We found ${data.totalHits} images.`);
+  //     })
+  //     .catch(error => console.log(error));
 }
 
-function onLoadMore(e) {
+async function onLoadMore(e) {
   e.preventDefault();
 
-  newsApiService
-    .fetchArticles()
-    .then(data => {
-      createMarkup(data.hits);
-      simpleLightBox = new SimpleLightbox('.gallery a', {
-        captionsData: 'alt',
-        captionPosition: 'bottom',
-        captionDelay: 250,
-      }).refresh();
-      if (data.hits.length < 40) {
-        refs.loadMoreBt.classList.add('is-hidden');
-        Notify.failure(
-          `We're sorry, but you've reached the end of search results.`
-        );
-      }
-    })
-    .catch(error => console.log(error));
+  try {
+    const data = await newsApiService.fetchArticles();
+
+    createMarkup(data.hits);
+
+    lightbox.refresh();
+
+    if (data.hits.length < 40) {
+      refs.loadMoreBt.classList.add('is-hidden');
+      Notify.failure(
+        `We're sorry, but you've reached the end of search results.`
+      );
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  //   newsApiService
+  //     .fetchArticles()
+  //     .then(data => {
+  //       createMarkup(data.hits);
+
+  //       lightbox.refresh();
+  //       if (data.hits.length < 40) {
+  //         refs.loadMoreBt.classList.add('is-hidden');
+
+  //         Notify.failure(
+  //           `We're sorry, but you've reached the end of search results.`
+  //         );
+  //       }
+  //     })
+  //     .catch(error => console.log(error));
 }
 
 function createMarkup(hits) {
